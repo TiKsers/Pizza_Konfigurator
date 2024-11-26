@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface PizzaServiceInterface {
     boolean configurePizza(String size,
+                           String dough,
                            String sauce,
                            String cheese,
                            String meat,
@@ -15,10 +16,10 @@ public interface PizzaServiceInterface {
                            HashSet<String> specialities,
                            HashSet<String> extras,
                            int bakingDegree,
-                           boolean isGlutenfree);
+                           boolean isGlutenFree) throws PizzaException;
 
     double total();
 
-    double getPrice(File textFileDatabase, String name);
+    double getPrice(PizzaServiceDataTableEnum table, String name) throws PizzaException;
     List<Map<String, Double>> getReceipt();
 }

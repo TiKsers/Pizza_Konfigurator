@@ -9,3 +9,5 @@
  /*.ipr
  /*.iws
  /out
+ /*.class
+ /*.classpath
