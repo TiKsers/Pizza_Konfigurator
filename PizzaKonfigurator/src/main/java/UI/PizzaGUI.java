@@ -23,9 +23,9 @@ public class PizzaGUI {
         // Basic Frame Konfiguration
         pizzaFrame = new JFrame("Pizza Konfigurator");
         pizzaFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pizzaFrame.setLayout(new GridLayout(4, 1));
+        pizzaFrame.setLayout(new GridLayout(5, 1));
         pizzaFrame.setSize(800, 700);
-        pizzaFrame.setResizable(false);
+        //pizzaFrame.setResizable(false);
 
         // Pizza Size Config
         {
@@ -38,8 +38,37 @@ public class PizzaGUI {
             JPanel sizeOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             sizeSmall = new JRadioButton("Klein (20cm) - 5,00 €");
             sizeMedium = new JRadioButton("Mittel (30cm) - 7,50 €");
+            sizeMedium.setSelected(true);
             sizeLarge = new JRadioButton("Groß (40cm) - 10,00 €");
             sizeFamily = new JRadioButton("Familienpizza (50cm) - 13,00 €");
+
+            // Hinzufuegen Action Listener
+            ActionListener sizeListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JRadioButton source = (JRadioButton) e.getSource();
+                    if (source == sizeFamily) {
+                        doughCheeseEdge.setEnabled(false);
+                        doughCheeseEdge.setSelected(false);
+                        doughThin.setEnabled(false);
+                        doughThin.setSelected(false);
+                        doughWholegrain.setEnabled(false);
+                        doughWholegrain.setSelected(false);
+                    } else if (source == sizeSmall) {
+                        doughCheeseEdge.setEnabled(false);
+                        doughCheeseEdge.setSelected(false);
+                        // Fam Pizza Enable
+                        doughThin.setEnabled(true);
+                        doughWholegrain.setEnabled(true);
+                    }
+                    else {
+                        doughCheeseEdge.setEnabled(true);
+                        doughThin.setEnabled(true);
+                        doughWholegrain.setEnabled(true);
+                    }
+                    System.out.println("Selected size: " + source.getText());
+                }
+            };
 
             sizeGroup = new ButtonGroup();
             sizeGroup.add(sizeSmall);
@@ -51,6 +80,11 @@ public class PizzaGUI {
             sizeOptionsPanel.add(sizeMedium);
             sizeOptionsPanel.add(sizeLarge);
             sizeOptionsPanel.add(sizeFamily);
+
+            sizeSmall.addActionListener(sizeListener);
+            sizeMedium.addActionListener(sizeListener);
+            sizeLarge.addActionListener(sizeListener);
+            sizeFamily.addActionListener(sizeListener);
             // Fügt das Panel in 2te reihe von sizePanel ein
             sizePanel.add(sizeOptionsPanel);
         }
@@ -63,10 +97,32 @@ public class PizzaGUI {
 
             JPanel doughOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             doughClassic = new JRadioButton("Klassischer Teig - 0 €");
+            doughClassic.setSelected(true);
             doughThin = new JRadioButton("Dünner Teig - 0,50 €");
             doughWholegrain = new JRadioButton("Vollkornteig - 1,00 €");
             doughGlutenFree = new JRadioButton("Glutenfreier Teig - 1,50 €");
             doughCheeseEdge = new JRadioButton("Käserand - 2,00 €");
+
+            ActionListener doughListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JRadioButton source = (JRadioButton) e.getSource();
+                    if (source == doughGlutenFree) {
+                        sauceCremeCraiche.setEnabled(false);
+                        saucePesto.setEnabled(false);
+                    }
+                    else if (source == doughThin) {
+                        sauceCremeCraiche.setEnabled(true);
+                        saucePesto.setEnabled(true);
+                        // Backgrad knusprig disablen
+                    }
+                    else {
+                        sauceCremeCraiche.setEnabled(true);
+                        saucePesto.setEnabled(true);
+                    }
+                    System.out.println("Selected dough: " + source.getText());
+                }
+            };
 
             doughGroup = new ButtonGroup();
             doughGroup.add(doughClassic);
@@ -81,6 +137,12 @@ public class PizzaGUI {
             doughOptionsPanel.add(doughGlutenFree);
             doughOptionsPanel.add(doughCheeseEdge);
 
+            doughClassic.addActionListener(doughListener);
+            doughThin.addActionListener(doughListener);
+            doughWholegrain.addActionListener(doughListener);
+            doughGlutenFree.addActionListener(doughListener);
+            doughCheeseEdge.addActionListener(doughListener);
+
             doughPanel.add(doughOptionsPanel);
         }
 
@@ -92,6 +154,7 @@ public class PizzaGUI {
 
             JPanel sauceOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             sauceTomate = new JRadioButton("Tomate Sauce - 0 €");
+            sauceTomate.setSelected(true);
             sauceBBQ = new JRadioButton("BBQ-Sauce - 0,50 €");
             sauceCremeCraiche = new JRadioButton("Creme Fraiche - 0,50 €");
             saucePesto = new JRadioButton("Pesto - 1,00 €");
@@ -119,11 +182,13 @@ public class PizzaGUI {
 
             JPanel cheeseOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             cheeseMozzarella = new JRadioButton("Mozzarella - 0€");
+            cheeseMozzarella.setSelected(true);
             cheeseGouda = new JRadioButton("Gouda - 0,50€");
             cheeseCheddar = new JRadioButton("Cheddar - 0,50€");
             cheeseParmesan = new JRadioButton("Parmesan - 1€");
             cheeseVegan = new JRadioButton("Vegan - 1,50€");
             //cheeseExtra = new JRadioButton("Extra"); // BEachten ....
+            //cheeseCheddar.setEnabled(false);
 
             cheeseGroup = new ButtonGroup();
             cheeseGroup.add(cheeseMozzarella);
