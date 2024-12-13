@@ -28,7 +28,8 @@ public class PizzaService implements PizzaServiceInterface {
     private final File specialitiesPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\specialitiesPrices.csv");
     private final File vegetablesPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\vegetablesPrices.csv");
 
-    public PizzaService() {}
+    public PizzaService() {
+    }
 
     @Override
     public boolean configurePizza(String size,
@@ -57,8 +58,6 @@ public class PizzaService implements PizzaServiceInterface {
         checkIfGlutenFree(isGlutenFree, dough);
 
 
-
-
         return true;
     }
 
@@ -69,8 +68,52 @@ public class PizzaService implements PizzaServiceInterface {
     }
 
     @Override
-    public double total() {
-        return 0;
+    public double total() throws PizzaException {
+        double totalPrice = 0.0;
+        double sizePrice = getPrice(PizzaServiceDataTableEnum.SIZE, size);
+        double doughPrice = getPrice(PizzaServiceDataTableEnum.DOUGH, dough);
+        double saucePrice = getPrice(PizzaServiceDataTableEnum.SAUCE, sauce);
+        double cheesePrice = getPrice(PizzaServiceDataTableEnum.CHEESE, cheese);
+        double meatPrice = getPrice(PizzaServiceDataTableEnum.MEAT, meat);
+        double vegetablePrice = getPrice(PizzaServiceDataTableEnum.VEGETABLES, vegetables);
+        double extraToppingsPrice = getExtraToppingsPrice();
+        double specialitiesPrice = getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities);
+        double extrasPrice = getPrice(PizzaServiceDataTableEnum.EXTRAS, extras);
+        totalPrice = sizePrice + doughPrice + saucePrice + cheesePrice +
+                meatPrice + vegetablePrice + extraToppingsPrice + specialitiesPrice +
+                extrasPrice;
+        return totalPrice;
+    }
+
+    private double getExtraToppingsPrice() {
+        HashSet<PizzaServiceDataTableEnum> extraToppingsEnumSet = new HashSet<>();
+        extraToppingsEnumSet.add(PizzaServiceDataTableEnum.MEAT);
+        extraToppingsEnumSet.add(PizzaServiceDataTableEnum.VEGETABLES);
+        extraToppingsEnumSet.add(PizzaServiceDataTableEnum.CHEESE);
+        return getPrice(extraToppingsEnumSet, extraToppings);
+    }
+
+    @Override
+    public double getPrice(HashSet<PizzaServiceDataTableEnum> textFileDataTables, HashSet<String> names) {
+        double price = 0.0;
+        for (PizzaServiceDataTableEnum element : textFileDataTables) {
+            for (String name : names) {
+                try {
+                    price += getPrice(element, name);
+                } catch (PizzaException ignored) {
+                }
+            }
+        }
+        return price;
+    }
+
+    @Override
+    public double getPrice(PizzaServiceDataTableEnum textFileDataTable, HashSet<String> names) throws PizzaException {
+        double price = 0.0;
+        for (String name : names) {
+            price += getPrice(textFileDataTable, name);
+        }
+        return price;
     }
 
     @Override
@@ -79,7 +122,7 @@ public class PizzaService implements PizzaServiceInterface {
 
         List<String[]> prices = readFromTable(file);
         double price;
-        for(String[] namePriceTupel : prices) {
+        for (String[] namePriceTupel : prices) {
             if (namePriceTupel[0].equals(name)) {
                 price = Double.parseDouble(namePriceTupel[1]);
                 return price;
@@ -125,7 +168,25 @@ public class PizzaService implements PizzaServiceInterface {
     }
 
     @Override
-    public List<Map<String, Double>> getReceipt() {
-        return null;
+    public Map<String, Double> getReceipt() throws PizzaException {
+        TreeMap<String, Double> receipt = new TreeMap<>();
+        receipt.put(size, getPrice(PizzaServiceDataTableEnum.SIZE, size));
+        receipt.put(dough, getPrice(PizzaServiceDataTableEnum.DOUGH, dough));
+        receipt.put(sauce, getPrice(PizzaServiceDataTableEnum.SAUCE, sauce));
+        receipt.put(cheese, getPrice(PizzaServiceDataTableEnum.MEAT, meat));
+        receipt.put(vegetables, getPrice(PizzaServiceDataTableEnum.VEGETABLES, vegetables));
+        receipt.put(getReceiptStringOfSet(extraToppings), getExtraToppingsPrice());
+        receipt.put(getReceiptStringOfSet(specialities), getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities));
+        receipt.put(getReceiptStringOfSet(extras), getPrice(PizzaServiceDataTableEnum.EXTRAS, extras));
+        return receipt;
+    }
+    private String getReceiptStringOfSet(HashSet<String> extraSpecialitySet) {
+        StringBuilder pizzaToppingsSpecialities = new StringBuilder();
+        for (String element : extraSpecialitySet) {
+            pizzaToppingsSpecialities.append(element);
+            pizzaToppingsSpecialities.append(", ");
+        }
+        pizzaToppingsSpecialities.replace(pizzaToppingsSpecialities.lastIndexOf(","), pizzaToppingsSpecialities.lastIndexOf(","), "");
+        return pizzaToppingsSpecialities.toString();
     }
 }
