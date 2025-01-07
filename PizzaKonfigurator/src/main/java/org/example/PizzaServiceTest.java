@@ -41,7 +41,8 @@ class PizzaServiceTest {
 		try {
 			result = pizzaService.configurePizza("This", "is", "a", "completely", "false", "pizza input", null, null, null, 1000000, false);
 			assertEquals(false, result);
-		} catch (PizzaException e) {} 
+		} catch (PizzaException e) {
+		} 
     }
     
     @Test
@@ -69,11 +70,20 @@ class PizzaServiceTest {
 	@Test
 	void testTotal() {
 		PizzaService pizzaService = new PizzaService();
-		double totalPrice = -1.0;
+		Map<String, Double> receipt; 
+		double totalPrice = 0.0;
+		
+		HashSet<String> extraToppings= new HashSet<>();
+        extraToppings.add("mozzarella");
+        HashSet<String> specialities= new HashSet<>();
+        specialities.add("seafood");
+        HashSet<String> extras = new HashSet<>();
+        extras.add("salat");
+		
 		
         try {
         	
-			pizzaService.configurePizza("small", "classic", "tomato", "mozzarella", null, null, null, null, null, 220, false);
+			pizzaService.configurePizza("small", "classic", "tomato", "mozzarella", "ham", "champignons", extraToppings, specialities, extras, 220, false);
         } catch (PizzaException e) {
 			fail("pizza couldn't be configured");
         }
@@ -84,7 +94,7 @@ class PizzaServiceTest {
 		} catch (PizzaException e) {
 			fail("total() couldn't be calculated");
 		}
-        assertEquals(5.00, totalPrice);
+        assertEquals(14.5, totalPrice);
 	}
 
 	@Test
@@ -105,18 +115,36 @@ class PizzaServiceTest {
 		PizzaService pizzaService = new PizzaService();
 		Map<String, Double> receipt; 
 		
+		HashSet<String> extraToppings= new HashSet<>();
+        extraToppings.add("mozzarella");
+        HashSet<String> specialities= new HashSet<>();
+        specialities.add("seafood");
+        HashSet<String> extras = new HashSet<>();
+        extras.add("salat");
+		
+		
         try {
         	
-			pizzaService.configurePizza("small", "classic", "tomato", "mozzarella", null, null, null, null, null, 220, false);
+			pizzaService.configurePizza("small", "classic", "tomato", "mozzarella", "ham", "champignons", extraToppings, specialities, extras, 220, false);
         } catch (PizzaException e) {
-			fail("pizza couldn't be configured couldn't be calculated");
+			fail("pizza couldn't be configured");
         }
         
         try {
         	receipt = pizzaService.getReceipt();
-        	assertEquals(5.00, receipt.get("small"));
+        	
+        	double total = 0.0;
+        	for (Map.Entry<String, Double> entry : receipt.entrySet()) {
+//                System.out.println(entry.getKey() + ": " + entry.getValue());
+                total += entry.getValue();
+            }
+        	
+        	assertEquals(14.5, total);
+        	assertEquals(6.0, receipt.get("small"));
+//        	System.out.println("#### total: "+pizzaService.total());
+        	
 		} catch (PizzaException e) {
-			fail("getReceipt() couldn't be calculated");
+			fail();
 		}
         
 	}
@@ -160,5 +188,6 @@ class PizzaServiceTest {
 			Assert.fail();
 		}
 	}
+
 
 }

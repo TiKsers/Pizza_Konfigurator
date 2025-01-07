@@ -172,7 +172,7 @@ public class PizzaService implements PizzaServiceInterface {
                 String[] items = line.split(csvSplitBy);
                 String name = items[0];
                 String price = items[1];
-                System.out.println("Name: " + name + " , Price: " + price);
+//                System.out.println("Name: " + name + " , Price: " + price);
                 prices.add(items);
             }
         } catch (IOException e) {
@@ -187,7 +187,8 @@ public class PizzaService implements PizzaServiceInterface {
         receipt.put(size, getPrice(PizzaServiceDataTableEnum.SIZE, size));
         receipt.put(dough, getPrice(PizzaServiceDataTableEnum.DOUGH, dough));
         receipt.put(sauce, getPrice(PizzaServiceDataTableEnum.SAUCE, sauce));
-        receipt.put(cheese, getPrice(PizzaServiceDataTableEnum.MEAT, meat));
+        receipt.put(cheese, getPrice(PizzaServiceDataTableEnum.CHEESE, cheese));
+        receipt.put(meat, getPrice(PizzaServiceDataTableEnum.MEAT, meat));
         receipt.put(vegetables, getPrice(PizzaServiceDataTableEnum.VEGETABLES, vegetables));
         receipt.put(getReceiptStringOfSet(extraToppings), getExtraToppingsPrice());
         receipt.put(getReceiptStringOfSet(specialities), getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities));
