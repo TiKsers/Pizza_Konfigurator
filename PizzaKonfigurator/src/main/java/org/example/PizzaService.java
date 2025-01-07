@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class PizzaService implements PizzaServiceInterface {
@@ -19,18 +20,31 @@ public class PizzaService implements PizzaServiceInterface {
     private int bakingDegree;
     private boolean isGlutenFree;
 
-    private final File sizePrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\sizePrices.csv");
-    private final File cheesePrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\cheesePrices.csv");
-    private final File doughPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\doughPrices.csv");
-    private final File extrasPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\extrasPrices.csv");
-    private final File meatPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\meatPrices.csv");
-    private final File saucePrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\saucePrices.csv");
-    private final File specialitiesPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\specialitiesPrices.csv");
-    private final File vegetablesPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\vegetablesPrices.csv");
-
-    public PizzaService() {
+    private  File sizePrices ;
+    private  File cheesePrices;
+    private  File doughPrices ;
+    private  File extrasPrices ;
+    private  File meatPrices ;
+    private  File saucePrices ;
+    private  File specialitiesPrices;
+    private  File vegetablesPrices ;
+ 
+    
+    public PizzaService(){
+    	try {
+		sizePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/sizePrices.csv").toURI());
+        cheesePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/cheesePrices.csv").toURI());
+        doughPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/doughPrices.csv").toURI());
+        extrasPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/extrasPrices.csv").toURI());
+        meatPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/meatPrices.csv").toURI());
+        saucePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/saucePrices.csv").toURI());
+        specialitiesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/specialitiesPrice.csv").toURI());
+        vegetablesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/vegetablesPrices.csv").toURI());
+    	} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
     }
-
+    
     @Override
     public boolean configurePizza(String size,
                                   String dough,
