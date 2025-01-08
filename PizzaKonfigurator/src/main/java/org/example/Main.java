@@ -4,8 +4,6 @@ import java.util.HashSet;
 
 import static org.example.PizzaServiceDataTableEnum.*;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) throws PizzaException {
         PizzaService pizzaService = new PizzaService();
@@ -26,7 +24,7 @@ public class Main {
         pizzaService.configurePizza("medium", "classic", "tomato",
                 "mozzarella", "salami", "onion", null, specialities, extras, 200,false);
 
-        System.out.println(pizzaService.total());
+        System.out.println("total price: " + pizzaService.total() + "€");
         System.out.println(pizzaService.getReceipt());
     }
 }
