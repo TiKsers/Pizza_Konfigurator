@@ -70,8 +70,6 @@ public class PizzaService implements PizzaServiceInterface {
         this.isGlutenFree = isGlutenFree;
 
         checkIfGlutenFree(isGlutenFree, dough);
-
-
         return true;
     }
 
@@ -178,6 +176,7 @@ public class PizzaService implements PizzaServiceInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(prices);
         return prices;
     }
 
