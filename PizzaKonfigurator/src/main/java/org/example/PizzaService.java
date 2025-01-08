@@ -221,7 +221,10 @@ public class PizzaService implements PizzaServiceInterface {
             pizzaToppingsSpecialities.append(element);
             pizzaToppingsSpecialities.append(", ");
         }
-        pizzaToppingsSpecialities.replace(pizzaToppingsSpecialities.lastIndexOf(","), pizzaToppingsSpecialities.lastIndexOf(",") + 2, "");
+        int lastIndex = pizzaToppingsSpecialities.lastIndexOf(", ");
+        if (lastIndex != -1) {
+            pizzaToppingsSpecialities.replace(lastIndex, lastIndex + 2, "");
+        }
         pizzaToppingsSpecialities.append(" ]");
         return pizzaToppingsSpecialities.toString();
     }
