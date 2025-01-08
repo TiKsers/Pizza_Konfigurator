@@ -210,6 +210,9 @@ public class PizzaService implements PizzaServiceInterface {
         return receipt;
     }
     private String getReceiptStringOfSet(HashSet<String> extraSpecialitySet) {
+        if (extraSpecialitySet == null) {
+            return "";
+        }
         StringBuilder pizzaToppingsSpecialities = new StringBuilder();
         for (String element : extraSpecialitySet) {
             pizzaToppingsSpecialities.append(element);
