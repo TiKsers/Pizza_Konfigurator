@@ -88,9 +88,24 @@ public class PizzaService implements PizzaServiceInterface {
         double cheesePrice = getPrice(PizzaServiceDataTableEnum.CHEESE, cheese);
         double meatPrice = getPrice(PizzaServiceDataTableEnum.MEAT, meat);
         double vegetablePrice = getPrice(PizzaServiceDataTableEnum.VEGETABLES, vegetables);
-        double extraToppingsPrice = getExtraToppingsPrice();
-        double specialitiesPrice = getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities);
-        double extrasPrice = getPrice(PizzaServiceDataTableEnum.EXTRAS, extras);
+        double extraToppingsPrice;
+        if (extraToppings == null) {
+            extraToppingsPrice = 0.0;
+        } else {
+            extraToppingsPrice = getExtraToppingsPrice();
+        }
+        double specialitiesPrice;
+        if (specialities == null) {
+            specialitiesPrice = 0.0;
+        } else {
+            specialitiesPrice = getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities);
+        }
+        double extrasPrice;
+        if (extras == null) {
+            extrasPrice = 0.0;
+        } else {
+            extrasPrice = getPrice(PizzaServiceDataTableEnum.EXTRAS, extras);
+        }
         totalPrice = sizePrice + doughPrice + saucePrice + cheesePrice +
                 meatPrice + vegetablePrice + extraToppingsPrice + specialitiesPrice +
                 extrasPrice;
