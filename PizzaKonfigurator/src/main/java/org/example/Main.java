@@ -9,14 +9,14 @@ import static org.example.PizzaServiceDataTableEnum.*;
 public class Main {
     public static void main(String[] args) throws PizzaException {
         PizzaService pizzaService = new PizzaService();
-        System.out.println(pizzaService.getPrice(SAUCE, "tomato"));
-        System.out.println(pizzaService.getPrice(CHEESE, "mozzarella"));
-        System.out.println(pizzaService.getPrice(DOUGH, "classic"));
-        System.out.println(pizzaService.getPrice(EXTRAS, "salat"));
-        System.out.println(pizzaService.getPrice(MEAT, "salami"));
-        System.out.println(pizzaService.getPrice(SIZE, "medium"));
-        System.out.println(pizzaService.getPrice(SPECIALITIES, "seafood"));
-        System.out.println(pizzaService.getPrice(VEGETABLES, "onion"));
+        System.out.println("tomato " + pizzaService.getPrice(SAUCE, "tomato"));
+        System.out.println("mozzarella" + pizzaService.getPrice(CHEESE, "mozzarella"));
+        System.out.println("classic" + pizzaService.getPrice(DOUGH, "classic"));
+        System.out.println("salat" + pizzaService.getPrice(EXTRAS, "salat"));
+        System.out.println("salami" + pizzaService.getPrice(MEAT, "salami"));
+        System.out.println("medium" + pizzaService.getPrice(SIZE, "medium"));
+        System.out.println("seafood" + pizzaService.getPrice(SPECIALITIES, "seafood"));
+        System.out.println("onion" + pizzaService.getPrice(VEGETABLES, "onion"));
 
 
         HashSet<String> extras = new HashSet<>();
@@ -27,5 +27,6 @@ public class Main {
                 "mozzarella", "salami", "onion", null, specialities, extras, 200,false);
 
         System.out.println(pizzaService.total());
+        System.out.println(pizzaService.getReceipt());
     }
 }

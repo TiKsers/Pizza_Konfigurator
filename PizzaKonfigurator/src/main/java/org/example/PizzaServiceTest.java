@@ -1,18 +1,12 @@
 package org.example;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class PizzaServiceTest {
 

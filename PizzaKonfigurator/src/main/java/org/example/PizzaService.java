@@ -191,7 +191,6 @@ public class PizzaService implements PizzaServiceInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(prices);
         return prices;
     }
 
@@ -204,21 +203,26 @@ public class PizzaService implements PizzaServiceInterface {
         receipt.put(cheese, getPrice(PizzaServiceDataTableEnum.CHEESE, cheese));
         receipt.put(meat, getPrice(PizzaServiceDataTableEnum.MEAT, meat));
         receipt.put(vegetables, getPrice(PizzaServiceDataTableEnum.VEGETABLES, vegetables));
-        receipt.put(getReceiptStringOfSet(extraToppings), getExtraToppingsPrice());
-        receipt.put(getReceiptStringOfSet(specialities), getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities));
-        receipt.put(getReceiptStringOfSet(extras), getPrice(PizzaServiceDataTableEnum.EXTRAS, extras));
+        if (extraToppings != null) {
+            receipt.put(getReceiptStringOfSet(extraToppings), getExtraToppingsPrice());
+        }
+        if (specialities != null) {
+            receipt.put(getReceiptStringOfSet(specialities), getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities));
+        }
+        if (extras != null) {
+            receipt.put(getReceiptStringOfSet(extras), getPrice(PizzaServiceDataTableEnum.EXTRAS, extras));
+        }
         return receipt;
     }
     private String getReceiptStringOfSet(HashSet<String> extraSpecialitySet) {
-        if (extraSpecialitySet == null) {
-            return "";
-        }
         StringBuilder pizzaToppingsSpecialities = new StringBuilder();
+        pizzaToppingsSpecialities.append("[ ");
         for (String element : extraSpecialitySet) {
             pizzaToppingsSpecialities.append(element);
             pizzaToppingsSpecialities.append(", ");
         }
-        pizzaToppingsSpecialities.replace(pizzaToppingsSpecialities.lastIndexOf(","), pizzaToppingsSpecialities.lastIndexOf(","), "");
+        pizzaToppingsSpecialities.replace(pizzaToppingsSpecialities.lastIndexOf(","), pizzaToppingsSpecialities.lastIndexOf(",") + 2, "");
+        pizzaToppingsSpecialities.append(" ]");
         return pizzaToppingsSpecialities.toString();
     }
 }
