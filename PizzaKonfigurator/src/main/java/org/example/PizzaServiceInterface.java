@@ -18,8 +18,11 @@ public interface PizzaServiceInterface {
                            int bakingDegree,
                            boolean isGlutenFree) throws PizzaException;
 
-    double total();
+    double total() throws PizzaException;
 
     double getPrice(PizzaServiceDataTableEnum table, String name) throws PizzaException;
-    List<Map<String, Double>> getReceipt();
+    public double getPrice(PizzaServiceDataTableEnum textFileDataTable, HashSet<String> names) throws PizzaException;
+    public double getPrice(HashSet<PizzaServiceDataTableEnum> textFileDataTables, HashSet<String> names);
+
+    Map<String, Double> getReceipt() throws PizzaException;
 }

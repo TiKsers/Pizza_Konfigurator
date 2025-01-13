@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class PizzaService implements PizzaServiceInterface {
@@ -19,17 +20,31 @@ public class PizzaService implements PizzaServiceInterface {
     private int bakingDegree;
     private boolean isGlutenFree;
 
-    private final File sizePrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\sizePrices.csv");
-    private final File cheesePrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\cheesePrices.csv");
-    private final File doughPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\doughPrices.csv");
-    private final File extrasPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\extrasPrices.csv");
-    private final File meatPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\meatPrices.csv");
-    private final File saucePrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\saucePrices.csv");
-    private final File specialitiesPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\specialitiesPrices.csv");
-    private final File vegetablesPrices = new File("PizzaKonfigurator\\src\\main\\resources\\databaseTextFiles\\vegetablesPrices.csv");
-
-    public PizzaService() {}
-
+    private  File sizePrices ;
+    private  File cheesePrices;
+    private  File doughPrices ;
+    private  File extrasPrices ;
+    private  File meatPrices ;
+    private  File saucePrices ;
+    private  File specialitiesPrices;
+    private  File vegetablesPrices ;
+ 
+    
+    public PizzaService(){
+    	try {
+		sizePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/sizePrices.csv").toURI());
+        cheesePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/cheesePrices.csv").toURI());
+        doughPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/doughPrices.csv").toURI());
+        extrasPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/extrasPrices.csv").toURI());
+        meatPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/meatPrices.csv").toURI());
+        saucePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/saucePrices.csv").toURI());
+        specialitiesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/specialitiesPrice.csv").toURI());
+        vegetablesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/vegetablesPrices.csv").toURI());
+    	} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+    }
+    
     @Override
     public boolean configurePizza(String size,
                                   String dough,
@@ -55,10 +70,6 @@ public class PizzaService implements PizzaServiceInterface {
         this.isGlutenFree = isGlutenFree;
 
         checkIfGlutenFree(isGlutenFree, dough);
-
-
-
-
         return true;
     }
 
@@ -69,8 +80,67 @@ public class PizzaService implements PizzaServiceInterface {
     }
 
     @Override
-    public double total() {
-        return 0;
+    public double total() throws PizzaException {
+        double totalPrice = 0.0;
+        double sizePrice = getPrice(PizzaServiceDataTableEnum.SIZE, size);
+        double doughPrice = getPrice(PizzaServiceDataTableEnum.DOUGH, dough);
+        double saucePrice = getPrice(PizzaServiceDataTableEnum.SAUCE, sauce);
+        double cheesePrice = getPrice(PizzaServiceDataTableEnum.CHEESE, cheese);
+        double meatPrice = getPrice(PizzaServiceDataTableEnum.MEAT, meat);
+        double vegetablePrice = getPrice(PizzaServiceDataTableEnum.VEGETABLES, vegetables);
+        double extraToppingsPrice;
+        if (extraToppings == null) {
+            extraToppingsPrice = 0.0;
+        } else {
+            extraToppingsPrice = getExtraToppingsPrice();
+        }
+        double specialitiesPrice;
+        if (specialities == null) {
+            specialitiesPrice = 0.0;
+        } else {
+            specialitiesPrice = getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities);
+        }
+        double extrasPrice;
+        if (extras == null) {
+            extrasPrice = 0.0;
+        } else {
+            extrasPrice = getPrice(PizzaServiceDataTableEnum.EXTRAS, extras);
+        }
+        totalPrice = sizePrice + doughPrice + saucePrice + cheesePrice +
+                meatPrice + vegetablePrice + extraToppingsPrice + specialitiesPrice +
+                extrasPrice;
+        return totalPrice;
+    }
+
+    private double getExtraToppingsPrice() {
+        HashSet<PizzaServiceDataTableEnum> extraToppingsEnumSet = new HashSet<>();
+        extraToppingsEnumSet.add(PizzaServiceDataTableEnum.MEAT);
+        extraToppingsEnumSet.add(PizzaServiceDataTableEnum.VEGETABLES);
+        extraToppingsEnumSet.add(PizzaServiceDataTableEnum.CHEESE);
+        return getPrice(extraToppingsEnumSet, extraToppings);
+    }
+
+    @Override
+    public double getPrice(HashSet<PizzaServiceDataTableEnum> textFileDataTables, HashSet<String> names) {
+        double price = 0.0;
+        for (PizzaServiceDataTableEnum element : textFileDataTables) {
+            for (String name : names) {
+                try {
+                    price += getPrice(element, name);
+                } catch (PizzaException ignored) {
+                }
+            }
+        }
+        return price;
+    }
+
+    @Override
+    public double getPrice(PizzaServiceDataTableEnum textFileDataTable, HashSet<String> names) throws PizzaException {
+        double price = 0.0;
+        for (String name : names) {
+            price += getPrice(textFileDataTable, name);
+        }
+        return price;
     }
 
     @Override
@@ -79,7 +149,7 @@ public class PizzaService implements PizzaServiceInterface {
 
         List<String[]> prices = readFromTable(file);
         double price;
-        for(String[] namePriceTupel : prices) {
+        for (String[] namePriceTupel : prices) {
             if (namePriceTupel[0].equals(name)) {
                 price = Double.parseDouble(namePriceTupel[1]);
                 return price;
@@ -115,7 +185,7 @@ public class PizzaService implements PizzaServiceInterface {
                 String[] items = line.split(csvSplitBy);
                 String name = items[0];
                 String price = items[1];
-                System.out.println("Name: " + name + " , Price: " + price);
+//                System.out.println("Name: " + name + " , Price: " + price);
                 prices.add(items);
             }
         } catch (IOException e) {
@@ -125,7 +195,37 @@ public class PizzaService implements PizzaServiceInterface {
     }
 
     @Override
-    public List<Map<String, Double>> getReceipt() {
-        return null;
+    public Map<String, Double> getReceipt() throws PizzaException {
+        TreeMap<String, Double> receipt = new TreeMap<>();
+        receipt.put(size, getPrice(PizzaServiceDataTableEnum.SIZE, size));
+        receipt.put(dough, getPrice(PizzaServiceDataTableEnum.DOUGH, dough));
+        receipt.put(sauce, getPrice(PizzaServiceDataTableEnum.SAUCE, sauce));
+        receipt.put(cheese, getPrice(PizzaServiceDataTableEnum.CHEESE, cheese));
+        receipt.put(meat, getPrice(PizzaServiceDataTableEnum.MEAT, meat));
+        receipt.put(vegetables, getPrice(PizzaServiceDataTableEnum.VEGETABLES, vegetables));
+        if (extraToppings != null) {
+            receipt.put(getReceiptStringOfSet(extraToppings), getExtraToppingsPrice());
+        }
+        if (specialities != null) {
+            receipt.put(getReceiptStringOfSet(specialities), getPrice(PizzaServiceDataTableEnum.SPECIALITIES, specialities));
+        }
+        if (extras != null) {
+            receipt.put(getReceiptStringOfSet(extras), getPrice(PizzaServiceDataTableEnum.EXTRAS, extras));
+        }
+        return receipt;
+    }
+    private String getReceiptStringOfSet(HashSet<String> extraSpecialitySet) {
+        StringBuilder pizzaToppingsSpecialities = new StringBuilder();
+        pizzaToppingsSpecialities.append("[ ");
+        for (String element : extraSpecialitySet) {
+            pizzaToppingsSpecialities.append(element);
+            pizzaToppingsSpecialities.append(", ");
+        }
+        int lastIndex = pizzaToppingsSpecialities.lastIndexOf(", ");
+        if (lastIndex != -1) {
+            pizzaToppingsSpecialities.replace(lastIndex, lastIndex + 2, "");
+        }
+        pizzaToppingsSpecialities.append(" ]");
+        return pizzaToppingsSpecialities.toString();
     }
 }
