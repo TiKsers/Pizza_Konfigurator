@@ -10,12 +10,14 @@ public class PizzaGUI {
         new PizzaGUI();
     }
 
+    double totalPrice, sizePrice, doughPrice, saucePrice, cheesePrice;
+
     JFrame pizzaFrame;
     JPanel sizePanel, doughPanel, saucePanel, cheesePanel, extraCheesePanel, toppingsPanel, summaryPanel;
     JPanel sizeOptionsPanel, doughOptionsPanel, sauceOptionsPanel, cheeseOptionsPanel, extraOptionsPanel, toppingsOptionsPanel;
     JLabel sizeLabel, doughLabel, sauceLabel, cheeseLabel, extraLabel, toppingsLabel, summaryLabel;
 
-    ButtonGroup sizeGroup, doughGroup,sauceGroup, cheeseGroup, extraGroup;
+    ButtonGroup sizeGroup, doughGroup, sauceGroup, cheeseGroup, extraGroup;
     JRadioButton sizeSmall, sizeMedium, sizeLarge, sizeFamily;
     JRadioButton doughClassic, doughThin, doughWholegrain, doughGlutenFree, doughCheeseEdge;
     JRadioButton sauceTomato, sauceBBQ, sauceCremeCraiche, saucePesto;
@@ -28,7 +30,7 @@ public class PizzaGUI {
         // Basic Frame Konfiguration
         pizzaFrame = new JFrame("Pizza Konfigurator");
         pizzaFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pizzaFrame.setLayout(new GridLayout(5, 1));
+        pizzaFrame.setLayout(new GridLayout(6, 1));
         pizzaFrame.setSize(800, 700);
         //pizzaFrame.setResizable(false);
 
@@ -37,6 +39,7 @@ public class PizzaGUI {
         pizzaFrame.add(this.createSaucePanel());
         pizzaFrame.add(this.createCheesePanel());
         pizzaFrame.add(this.createToppingsPanel());
+        pizzaFrame.add(this.createOrderPanel());
 
         pizzaFrame.setVisible(true);
     }
@@ -56,6 +59,7 @@ public class PizzaGUI {
 
         // Set standart option
         sizeMedium.setSelected(true);
+        doughPrice = 7.5;
 
         // Hinzufuegen Action Listener
         // Überarbeiten
@@ -63,25 +67,43 @@ public class PizzaGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JRadioButton source = (JRadioButton) e.getSource();
-                if (source == sizeFamily) {
-                    doughCheeseEdge.setEnabled(false);
-                    doughCheeseEdge.setSelected(false);
-                    doughThin.setEnabled(false);
-                    doughThin.setSelected(false);
-                    doughWholegrain.setEnabled(false);
-                    doughWholegrain.setSelected(false);
-                } else if (source == sizeSmall) {
-                    doughCheeseEdge.setEnabled(false);
-                    doughCheeseEdge.setSelected(false);
-                    // Fam Pizza Enable
-                    doughThin.setEnabled(true);
-                    doughWholegrain.setEnabled(true);
-                } else {
-                    doughCheeseEdge.setEnabled(true);
-                    doughThin.setEnabled(true);
-                    doughWholegrain.setEnabled(true);
+                switch (source.getText()) {
+                    case "Klein (20cm) - 5,00 €":
+                        sizePrice = 5;
+                        doughCheeseEdge.setEnabled(false);
+                        if (doughCheeseEdge.isSelected()) ;
+                        doughClassic.setSelected(true);
+                        //doughClassic.setSelected(true);
+                        // Fam Pizza Enable
+                        doughThin.setEnabled(true);
+                        doughWholegrain.setEnabled(true);
+                        break;
+                    case "Mittel (30cm) - 7,50 €":
+                        sizePrice = 7.5;
+                        doughCheeseEdge.setEnabled(true);
+                        doughThin.setEnabled(true);
+                        doughWholegrain.setEnabled(true);
+                        break;
+                    case "Groß (40cm) - 10,00 €":
+                        sizePrice = 10;
+                        doughCheeseEdge.setEnabled(true);
+                        doughThin.setEnabled(true);
+                        doughWholegrain.setEnabled(true);
+                        break;
+                    case "Familienpizza (50cm)":
+                        sizePrice = 13;
+                        doughCheeseEdge.setEnabled(false);
+                        doughCheeseEdge.setSelected(false);
+                        doughThin.setEnabled(false);
+                        doughThin.setSelected(false);
+                        doughWholegrain.setEnabled(false);
+                        doughWholegrain.setSelected(false);
+                        break;
+                    default:
+                        sizePrice = 7.5;
+                        break;
                 }
-                System.out.println("Selected size: " + source.getText());
+                System.out.println("Selected size: " + source.getText() + sizePrice);
             }
         };
 
@@ -130,6 +152,26 @@ public class PizzaGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JRadioButton source = (JRadioButton) e.getSource();
+                switch (source.getText()) {
+                    case "Klassischer Teig - 0 €":
+                        doughPrice = 0;
+                        break;
+                    case "Dünner Teig - 0,50 €":
+                        doughPrice = 0.5;
+                        break;
+                    case "Vollkornteig - 1,00 €":
+                        doughPrice = 1;
+                        break;
+                    case "Glutenfreier Teig - 1,50 €":
+                        doughPrice = 1.5;
+                        break;
+                    case "Käserand - 2,00 €":
+                        doughPrice = 2;
+                        break;
+                    default:
+                        doughPrice = 0;
+                        break;
+                }
                 if (source == doughGlutenFree) {
                     sauceCremeCraiche.setEnabled(false);
                     saucePesto.setEnabled(false);
@@ -187,14 +229,32 @@ public class PizzaGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JRadioButton source = (JRadioButton) e.getSource();
+                switch (source.getText()) {
+                    case "Tomate Sauce - 0":
+                        saucePrice = 0;
+                        break;
+                    case "BBQ-Sauce - 0,50 €":
+                        saucePrice = 0.5;
+                        break;
+                    case "Creme Fraiche - 0,50 €":
+                        saucePrice = 0.5;
+                        break;
+                    case "Pesto - 1,00 €":
+                        saucePrice = 1;
+                        break;
+                    default:
+                        saucePrice = 0;
+                        break;
+
+                }
                 if (source == sauceTomato)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == sauceBBQ)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == sauceCremeCraiche)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == saucePesto)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
             }
         };
 
@@ -241,21 +301,39 @@ public class PizzaGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JRadioButton source = (JRadioButton) e.getSource();
+                switch (source.getText()) {
+                    case "Mozzarella - 0":
+                        cheesePrice = 0;
+                        break;
+                    case "Gouda - 0,50€":
+                        cheesePrice = 0.5;
+                        break;
+                    case "Cheddar - 0,50€":
+                        cheesePrice = 0.5;
+                        break;
+                    case "Parmesan - 1€":
+                        cheesePrice = 1;
+                        break;
+                    case "Vegan - 1,50€":
+                        cheesePrice = 1.5;
+                        break;
+                }
+
                 if (source == cheeseMozzarella)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == cheeseGouda)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == cheeseCheddar)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == cheeseParmesan)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == cheeseVegan)
-                    System.out.println("IMPLEMENTIERUNG FEHLT");
+                    System.out.println("");
                 else if (source == cheeseExtra && cheeseExtra.isSelected())
                     extraCheesePanel.setVisible(true);
                 else if (source == cheeseExtra && !cheeseExtra.isSelected())
                     extraCheesePanel.setVisible(false);
-                }
+            }
         };
 
         extraCheeseListener = new ActionListener() {
@@ -323,14 +401,15 @@ public class PizzaGUI {
     }
 
     private JPanel createToppingsPanel() {
+        // toppingsPanel = new JPanel(new GridLayout(5, 4)); /4 Colls
         toppingsPanel = new JPanel(new GridLayout(2, 1));
         toppingsLabel = new JLabel("Choose Toppings:");
         toppingsPanel.add(toppingsLabel);
 
         String[] toppingsMeatlist = {"Fleisch", "Salami", "Schinken", "Hänchen"};
         String[] toppingsVegtableslist = {"Gemüse", "Paprika", "Zwieblen", "Spinat"};
-        String[] toppingsExtraslist = {"Extras","Jalapenos", "Knoblauch"};
-        String[] toppingsSepciallist = {"Spezialitäten","Trüffelöl", "Garnelen"};
+        String[] toppingsExtraslist = {"Extras", "Jalapenos", "Knoblauch"};
+        String[] toppingsSepciallist = {"Spezialitäten", "Trüffelöl", "Garnelen"};
 
         //toppingsOptionsPanel = new JPanel(new GridLayout(1,4));
         toppingsOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -361,7 +440,25 @@ public class PizzaGUI {
         return toppingsPanel;
     }
 
+    private JPanel createOrderPanel() {
+        JPanel orderPanel = new JPanel(new FlowLayout());
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField("0", 10);
+        priceField.setEditable(false);
 
+        JButton calculateButton = new JButton("Calculate Price");
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                totalPrice = sizePrice + doughPrice + saucePrice + cheesePrice;
+                priceField.setText(totalPrice + " €");
+            }
+        });
 
+        orderPanel.add(priceLabel);
+        orderPanel.add(priceField);
+        orderPanel.add(calculateButton);
+        return orderPanel;
+    }
 
 }
