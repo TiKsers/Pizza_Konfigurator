@@ -20,31 +20,31 @@ public class PizzaService implements PizzaServiceInterface {
     private int bakingDegree;
     private boolean isGlutenFree;
 
-    private  File sizePrices ;
-    private  File cheesePrices;
-    private  File doughPrices ;
-    private  File extrasPrices ;
-    private  File meatPrices ;
-    private  File saucePrices ;
-    private  File specialitiesPrices;
-    private  File vegetablesPrices ;
- 
-    
-    public PizzaService(){
-    	try {
-		sizePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/sizePrices.csv").toURI());
-        cheesePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/cheesePrices.csv").toURI());
-        doughPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/doughPrices.csv").toURI());
-        extrasPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/extrasPrices.csv").toURI());
-        meatPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/meatPrices.csv").toURI());
-        saucePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/saucePrices.csv").toURI());
-        specialitiesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/specialitiesPrice.csv").toURI());
-        vegetablesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/vegetablesPrices.csv").toURI());
-    	} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+    private File sizePrices;
+    private File cheesePrices;
+    private File doughPrices;
+    private File extrasPrices;
+    private File meatPrices;
+    private File saucePrices;
+    private File specialitiesPrices;
+    private File vegetablesPrices;
+
+
+    public PizzaService() {
+        try {
+            sizePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/sizePrices.csv").toURI());
+            cheesePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/cheesePrices.csv").toURI());
+            doughPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/doughPrices.csv").toURI());
+            extrasPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/extrasPrices.csv").toURI());
+            meatPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/meatPrices.csv").toURI());
+            saucePrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/saucePrices.csv").toURI());
+            specialitiesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/specialitiesPrice.csv").toURI());
+            vegetablesPrices = new File(PizzaService.class.getClassLoader().getResource("databaseTextFiles/vegetablesPrices.csv").toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     @Override
     public boolean configurePizza(String size,
                                   String dough,
@@ -57,6 +57,13 @@ public class PizzaService implements PizzaServiceInterface {
                                   HashSet<String> extras,
                                   int bakingDegree,
                                   boolean isGlutenFree) throws PizzaException {
+        if (size == null || dough == null || sauce == null || cheese == null ||
+            meat == null || vegetables == null || extraToppings == null ||
+            specialities == null || extras == null)
+        {
+            return false;
+        }
+
         this.size = size;
         this.dough = dough;
         this.sauce = sauce;
@@ -214,6 +221,7 @@ public class PizzaService implements PizzaServiceInterface {
         }
         return receipt;
     }
+
     private String getReceiptStringOfSet(HashSet<String> extraSpecialitySet) {
         StringBuilder pizzaToppingsSpecialities = new StringBuilder();
         pizzaToppingsSpecialities.append("[ ");
