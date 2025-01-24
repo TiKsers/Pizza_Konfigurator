@@ -5,7 +5,10 @@ import java.awt.*;
 import java.util.HashSet;
 
 public class PizzaGUI {
-    public static void main(String[] args) throws PizzaException {
+    public JButton createPizzaButton = new JButton("Total");
+    JLabel priceLabel = new JLabel();
+
+    public PizzaGUI() throws PizzaException {
         PizzaService pizzaService = new PizzaService();
 
         JFrame frame = new JFrame();
@@ -58,6 +61,7 @@ public class PizzaGUI {
         sizeGroup.add(mediumRadio);
         sizeGroup.add(largeRadio);
         sizeGroup.add(familyRadio);
+        smallRadio.setSelected(true);
 
         //Dough Radio Panel
         JRadioButton classicRadio = new JRadioButton("classic" + " " + pizzaService.getPrice(PizzaServiceDataTableEnum.DOUGH, "classic") + "€");
@@ -81,6 +85,7 @@ public class PizzaGUI {
         doughGroup.add(wholeGrainRadio);
         doughGroup.add(glutenFreeRadio);
         doughGroup.add(cheeseEdgeRadio);
+        classicRadio.setSelected(true);
 
         //Sauces Radio Panel
         JRadioButton tomatoRadio = new JRadioButton("tomato" + " " + pizzaService.getPrice(PizzaServiceDataTableEnum.SAUCE, "tomato") + "€");
@@ -100,6 +105,7 @@ public class PizzaGUI {
         sauceGroup.add(cremeFraicheRadio);
         sauceGroup.add(bbqRadio);
         sauceGroup.add(pestoRadio);
+        tomatoRadio.setSelected(true);
 
         //Cheese Radio Panel
         JRadioButton mozzarellaRadio = new JRadioButton("mozzarella" + " " + pizzaService.getPrice(PizzaServiceDataTableEnum.CHEESE, "mozzarella") + "€");
@@ -123,6 +129,7 @@ public class PizzaGUI {
         cheeseGroup.add(cheddarRadio);
         cheeseGroup.add(parmesanRadio);
         cheeseGroup.add(veganRadio);
+        cheddarRadio.setSelected(true);
 
         //Meat Radio Panel
         JRadioButton salamiRadio = new JRadioButton("salami" + " " + pizzaService.getPrice(PizzaServiceDataTableEnum.MEAT, "salami") + "€");
@@ -142,6 +149,7 @@ public class PizzaGUI {
         meatGroup.add(hamRadio);
         meatGroup.add(chickenRadio);
         meatGroup.add(kebabRadio);
+        salamiRadio.setSelected(true);
 
         //Vegetables Radio Panel
         JRadioButton tomatoVegRadio = new JRadioButton("tomato" + " " + pizzaService.getPrice(PizzaServiceDataTableEnum.VEGETABLES, "tomato") + "€");
@@ -173,6 +181,7 @@ public class PizzaGUI {
         vegetablesGroup.add(champignonsVegRadio);
         vegetablesGroup.add(pepperoniVegRadio);
         vegetablesGroup.add(oliveVegRadio);
+        tomatoVegRadio.setSelected(true);
 
         //Extras Radio Panel
         JRadioButton garlicBreadRadio = new JRadioButton("garlic bread" + " " + pizzaService.getPrice(PizzaServiceDataTableEnum.EXTRAS, "garlic bread") + "€");
@@ -200,9 +209,8 @@ public class PizzaGUI {
         specialtiesPanel.add(seafoodRadio);
 
         //Create Pizza Button
-        JButton createPizzaButton = new JButton("Total");
+
         specialtiesPanel.add(createPizzaButton);
-        JLabel priceLabel = new JLabel();
         createPizzaButton.addActionListener(e -> {
             String sizeVal = sizeGroup.getSelection().getActionCommand();
             String doughVal = doughGroup.getSelection().getActionCommand();
@@ -276,5 +284,17 @@ public class PizzaGUI {
         frame.setVisible(true);
         pizzaGUI.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    }
+
+    public JButton getCreatePizzaButton() {
+        return createPizzaButton;
+    }
+
+    public JLabel getPriceLabel() {
+        return priceLabel;
+    }
+
+    public static void main(String[] args) throws PizzaException {
+        new PizzaGUI();
     }
 }
